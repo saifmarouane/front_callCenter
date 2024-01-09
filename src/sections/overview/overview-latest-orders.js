@@ -44,60 +44,15 @@ export const OverviewLatestOrders = (props) => {
       order.id === orderId ? { ...order, isAvailable: !order.isAvailable } : order
     )
   );
-    console.log(`Toggle status for order ${orderId}`);
   };
   //--------WORK WITH API-----------//
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Products Order" />
+      <CardHeader title="" />
       <Scrollbar sx={{ flexGrow: 1 }}>
         <Box sx={{ minWidth: 800 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  Product Id
-                </TableCell>
-                <TableCell>
-                  Product Name
-                </TableCell>
-                <TableCell>
-                  Quantity
-                </TableCell>
-                <TableCell>
-                  Availability
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orders.map((order) => {
-
-                return (
-                  <TableRow
-                    hover
-                    key={order.product_id}
-                  >
-                    <TableCell>
-                      {order.product_id}
-                    </TableCell>
-                    <TableCell>
-                      {order.product_name}
-                    </TableCell>
-                    <TableCell>
-                      {order.quantity}
-                    </TableCell>
-                    <TableCell>
-                      <Checkbox
-                        checked={order.isAvailable}
-                        onChange={() => handleStatusToggle(order.id)}
-                      />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+          
         </Box>
       </Scrollbar>
       <Divider />

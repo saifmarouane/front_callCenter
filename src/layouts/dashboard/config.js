@@ -5,54 +5,41 @@ import UserIcon from '@heroicons/react/24/solid/UserIcon';
 import LockClosedIcon from '@heroicons/react/24/solid/LockClosedIcon';
 import UserPlusIcon from '@heroicons/react/24/solid/UserPlusIcon';
 import XCircleIcon from '@heroicons/react/24/solid/XCircleIcon';
-
-export const items = [
+import AssignmentIcon from '@mui/icons-material/Dashboard';
+import ChecklistIcon from '@mui/icons-material/Checklist';
+import LogoutIcon from '@mui/icons-material/Logout';
+import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';export const items = [
   {
-    title: 'Orders',
-    path: '/customers',
-    icon: <SvgIcon fontSize="small"><ShoppingBagIcon /></SvgIcon>,
-    roles: ['user', 'admin']
-  },
-  {
-    title: 'Products Order 1',
-    path: '/OrderDetailsPage',
-    icon: <SvgIcon fontSize="small"><ShoppingBagIcon /></SvgIcon>,
-    roles: ['user', 'admin']
-  },
-  {
-    title: 'Products Order',
+    title: 'Dashboard',
     path: '/',
-    icon: <SvgIcon fontSize="small"><ShoppingBagIcon /></SvgIcon>,
+    icon: <SvgIcon fontSize="small"><AssignmentIcon /></SvgIcon>,
     roles: ['user', 'admin']
   },
   {
-    title: 'Customers',
-    path: '/ordersstate',
-    icon: <SvgIcon fontSize="small"><UsersIcon /></SvgIcon>,
+    title: 'ajouter client',
+    path: '/contrats/ajouter',
+    icon: <SvgIcon fontSize="small"><CreateNewFolderIcon /></SvgIcon>,
     roles: ['user', 'admin']
   },
+  
   {
-    title: 'Account',
-    path: '/account',
-    icon: <SvgIcon fontSize="small"><UserIcon /></SvgIcon>,
+    title: 'liste des clients',
+    path: '/contrats/list_contrats',
+    icon: <SvgIcon fontSize="small"><ChecklistIcon /></SvgIcon>,
     roles: ['user', 'admin']
   },
+  
+  
   {
-    title: 'Login',
-    path: '/auth/login',
-    icon: <SvgIcon fontSize="small"><LockClosedIcon /></SvgIcon>,
-    roles: ['user', 'admin']
-  },
-  {
-    title: 'Register',
-    path: '/auth/register',
+    title: 'ajouter Agent',
+    path: '/register',
     icon: <SvgIcon fontSize="small"><UserPlusIcon /></SvgIcon>,
     roles: ['user', 'admin']
   },
   {
-    title: 'Error',
-    path: '/404',
-    icon: <SvgIcon fontSize="small"><XCircleIcon /></SvgIcon>,
+    title: 'se déconnecter ',
+    path: '/auth/login',
+    icon: <SvgIcon fontSize="small"><LogoutIcon /></SvgIcon>,
     roles: ['user', 'admin']
   }
 ];

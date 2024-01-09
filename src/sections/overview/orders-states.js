@@ -39,57 +39,7 @@ export const OrdersStates = (props) => {
       <CardHeader title="Customers" />
       <Scrollbar sx={{ flexGrow: 1 }}>
         <Box sx={{ minWidth: 800 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  Customer Id
-                </TableCell>
-                <TableCell>
-                  Customer Name
-                </TableCell>
-                <TableCell>
-                  Phone Number
-                </TableCell>
-                <TableCell>
-                  Location
-                </TableCell>
-                <TableCell>
-                  Availability
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orders.map((order) => {
-
-                return (
-                  <TableRow
-                    hover
-                    key={order.customer_id}
-                  >
-                    <TableCell>
-                      {order.customer_id}
-                    </TableCell>
-                    <TableCell>
-                      {order.customer_name}
-                    </TableCell>
-                    <TableCell>
-                      {order.phone_number}
-                    </TableCell>
-                    <TableCell>
-                      {order.address.city},{order.address.street}
-                    </TableCell>
-                    <TableCell>
-                      <SeverityPill color={statusMap[order.status]}>
-                        {order.status}
-                      </SeverityPill>
-                    </TableCell> 
-
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+          
         </Box>
       </Scrollbar>
       <Divider />

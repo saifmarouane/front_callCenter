@@ -100,7 +100,7 @@ export const SideNav = (props) => {
                 color="inherit"
                 variant="subtitle1"
               >
-                SmartPack
+                CallCenter
               </Typography>
             </div>
             <SvgIcon

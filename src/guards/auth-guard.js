@@ -25,7 +25,7 @@ export const AuthGuard = (props) => {
     }
 
     ignore.current = true;
-const isAuthenticated = window.sessionStorage.getItem('authenticated') === 'true';
+    const isAuthenticated = window.sessionStorage.getItem('authenticated') === 'true';
 
     if (!isAuthenticated) {
         console.log('Not authenticated, redirecting');

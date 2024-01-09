@@ -15,9 +15,8 @@ import {
   Typography,
   IconButton
 } from '@mui/material';
-import { Scrollbar } from 'src/components/scrollbar';
-import { getInitials } from 'src/utils/get-initials';
-import OrderDetailsPage from '../../pages/OrderDetailsPage'; 
+import { Scrollbar } from '../../components/scrollbar';
+import { getInitials } from '../../utils/get-initials';
 
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -28,7 +27,7 @@ import React, { useState, useEffect } from 'react';
 
 
 
-export const CustomersTable = (props) => {
+export const ContratsTable = (props) => {
 
 //   const [orders, setOrders] = useState([]);
 
@@ -195,7 +194,7 @@ export const CustomersTable = (props) => {
   );
 };
 
-CustomersTable.propTypes = {
+ContratsTable.propTypes = {
   count: PropTypes.number,
   items: PropTypes.array,
   onDeselectAll: PropTypes.func,

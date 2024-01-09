@@ -14,7 +14,7 @@ const Page = () => (
   <>
     <Head>
       <title>
-        Products Order| SmartPack
+        Call
       </title>
     </Head>
     <Box
@@ -60,27 +60,6 @@ const Page = () => (
             lg={20}
           >
             <OverviewLatestOrders
-              orders={[
-                {
-                  product_id: '0',
-                  product_name: 'cahier',
-                  quantity: '3',
-                  status: 'pending'
-                },
-                {
-                  product_id: '1',
-                  product_name: 'crayon',
-                  quantity: '1',
-                  status: 'pending'
-                },
-                {
-                  product_id: '2',
-                  product_name: 'livre',
-                  quantity: '1',
-                  status: 'pending'
-                },
-
-              ]}
               sx={{ height: '100%' }}
             />
           </Grid>

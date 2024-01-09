@@ -139,11 +139,12 @@ export const AuthProvider = ({ children }) => {
     router.push('/auth/login');
   };
 
-  const signUp = async (email, username, password) => {
+  const signUp = async (email, first_name,last_name, password) => {
     const user = {
       "email": email,
-      "username": username,
-      "password": password
+      "first_name": first_name,
+      "last_name": last_name,
+      "password": password,
     };
 
     const res = await fetch('http://localhost:8000/auth/register/', {
@@ -160,15 +161,15 @@ export const AuthProvider = ({ children }) => {
 
     const userData = await res.json();
 
-    window.sessionStorage.setItem('authenticated', 'true');
-    window.sessionStorage.setItem('user', JSON.stringify(userData));
-
+    //window.sessionStorage.setItem('authenticated', 'true');
+    //window.sessionStorage.setItem('user', JSON.stringify(userData));
+    
     dispatch({
       type: HANDLERS.SIGN_IN,
       payload: userData
     });
 
-    router.push('/auth/login');
+    router.push('/');
   };
 
   return (

@@ -12,6 +12,8 @@ import { useNProgress } from '../hooks/use-nprogress';
 import { createTheme } from '../theme';
 import { createEmotionCache } from '../utils/create-emotion-cache';
 import 'simplebar-react/dist/simplebar.min.css';
+import { BrowserRouter as Router } from 'react-router-dom'; // Importez BrowserRouter
+
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -27,10 +29,11 @@ const App = (props) => {
   const theme = createTheme();
 
   return (
+
     <CacheProvider value={emotionCache}>
       <Head>
         <title>
-          SmartPack Dashboard
+          CallCenter
         </title>
         <meta
           name="viewport"
@@ -52,6 +55,8 @@ const App = (props) => {
         </AuthProvider>
       </LocalizationProvider>
     </CacheProvider>
+
+
   );
 };
 

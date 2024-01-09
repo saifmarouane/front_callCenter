@@ -26,8 +26,8 @@ export const AccountPopover = (props) => {
     userSt = JSON.parse(window.sessionStorage.getItem('user'));
     console.log(userSt)
     user = {
-      name:userSt.email.split("@")[0] + " " + userSt.email.split("@")[1].split(".")[0],
-      email: userSt.email,
+      name:userSt.username,
+      role:userSt.role,
     };
   }
 
@@ -57,6 +57,12 @@ export const AccountPopover = (props) => {
           variant="body2"
         >
           {user.name}
+        </Typography>
+        <Typography
+          color="text.secondary"
+          variant="body2"
+        >
+          {user.role}
         </Typography>
       </Box>
       <Divider />
