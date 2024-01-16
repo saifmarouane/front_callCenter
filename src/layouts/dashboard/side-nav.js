@@ -51,7 +51,6 @@ export const SideNav = (props) => {
   const { open, onClose } = props;
   const pathname = usePathname();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
-  const logoPath = 'C:/Users/HP/Desktop/Master 2024/React-JS/SmartPack-Dashboard/public/assets/logos/logopic.png'
   const content = (
     <Scrollbar
       sx={{
@@ -81,7 +80,7 @@ export const SideNav = (props) => {
               width: 70
             }}
           >
-            <Logo src={logoPath}/>
+            
           </Box>
           <Box
             sx={{

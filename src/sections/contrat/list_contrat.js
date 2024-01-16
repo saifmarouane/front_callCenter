@@ -11,18 +11,20 @@ import { ContractProvider } from '../../sections/contrat/DetailContext';
 import { useLocation } from 'react-router-dom';
 import { useRouter } from 'next/router';
 
-export const List = ({ userRole }) => {
+export const List = () => {
   const [localFormData, setLocalFormData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
 
-  
+  const user = JSON.parse(window.sessionStorage.getItem('user'));
+  const username=user.username
+  const userRole=user.role
   useEffect(() => {
-    let apiUrl = 'http://localhost:8000/auth/user-forms/';
+    let apiUrl = 'http://localhost:8000/auth/userforms/';
     if (userRole !== 'admin') {
-      apiUrl += 'marouan1';
+      apiUrl += 'list/'+username+'/';
     }
 
     axios.get(apiUrl)
@@ -40,6 +42,18 @@ export const List = ({ userRole }) => {
     const updatedFormData = [...localFormData];
     updatedFormData.splice(index, 1);
     setLocalFormData(updatedFormData);
+    axios.delete('http://localhost:8000/auth/userforms/detail/'+index+'/')
+    .then(() => {
+      alert(
+
+        'suprimée avec succès'
+      )
+      // Handle success hereal
+    })
+    .catch(error => {
+      console.error('Axios error:', error);
+      // Handle errors here
+    });
   };
   
 
@@ -85,13 +99,13 @@ export const List = ({ userRole }) => {
             {filteredData.length > 0 ? (
               filteredData.map((data, index) => (
                 <TableRow key={index}>
-                  <TableCell>{data.id}</TableCell>
+                  <TableCell>{index=data.id}</TableCell>
                   <TableCell>{data.fullname}</TableCell>
                   <TableCell>{data.fstatut}</TableCell>
                   <TableCell>
                     {new Date(data.date_submitted).getFullYear()}-{String(new Date(data.date_submitted).getMonth() + 1).padStart(2, '0')}-{String(new Date(data.date_submitted).getDate()).padStart(2, '0')}
                   </TableCell>
-                  <TableCell>{data.fprixTotale*40} euro</TableCell>
+                  <TableCell>{data.total_prixcontracts} €</TableCell>
 
                   <TableCell>
                     <Button 
@@ -123,5 +137,4 @@ export const List = ({ userRole }) => {
 };
 
 List.propTypes = {
-  userRole: PropTypes.string.isRequired,
 };

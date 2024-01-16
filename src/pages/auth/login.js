@@ -59,7 +59,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Login | SmartPack</title>
+        <title>Login |</title>
       </Head>
       <Box sx={{ backgroundColor: 'background.paper', flex: '1 1 auto', alignItems: 'center', display: 'flex', justifyContent: 'center' }}>
         <Box sx={{ maxWidth: 550, px: 3, py: '100px', width: '100%' }}>
@@ -67,10 +67,7 @@ const Page = () => {
             <Stack spacing={1} sx={{ mb: 3 }}>
               <Typography variant="h4">Login</Typography>
               <Typography color="text.secondary" variant="body2">
-                Don't have an account?&nbsp;
-                <Link component={NextLink} href="/auth/register" underline="hover" variant="subtitle2">
-                  Register
-                </Link>
+                
               </Typography>
             </Stack>
             <Tabs onChange={handleMethodChange} sx={{ mb: -2 }} value={method}>

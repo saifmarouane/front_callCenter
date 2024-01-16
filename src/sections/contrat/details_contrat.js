@@ -8,6 +8,10 @@ import { ContractContext } from '../../sections/contrat/DetailContext';
 import { useLocation } from 'react-router-dom';
 import {  BrowserRouter } from 'react-router-dom';
 import {    FormControl, InputLabel, Select, MenuItem,makeStyles } from '@material-ui/core';
+import axios from 'axios';
+import {   SvgIcon } from '@mui/material';
+import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
+
 import {
   Grid,
   Avatar,
@@ -61,7 +65,6 @@ export const Details = ({  onDelete, onModify }) => {
   const classes = useStyles();
   const [contrats, setcontrats] = useState([
     {
-      user_form:1,
       Société_a_résilier: '',
       Type_de_Résiliation: '',
       Type_de_contrat: '',
@@ -81,7 +84,6 @@ export const Details = ({  onDelete, onModify }) => {
 
 const addForm = () => {
     setcontrats([...contrats, {
-      user_form:1,
       Société_a_résilier: '',
       Type_de_Résiliation: '',
       Type_de_contrat: '',
@@ -99,20 +101,7 @@ const addForm = () => {
     }]);
 };
 
-const handleChange = (e, index) => {
-  event.preventDefault(); // Empêche le rechargement de la page
 
-  const { name, value } = e.target;
-  const updatedForms = [...contrats];
-
-  // Vérifiez si l'index est valide
-  if (updatedForms[index]) {
-      updatedForms[index][name] = value;
-      setcontrats(updatedForms);
-  } else {
-      console.error(`L'objet à l'index ${index} n'existe pas dans contrats.`);
-  }
-};
 
   const handleDelete = () => {
     if (onDelete) {
@@ -127,342 +116,517 @@ const handleChange = (e, index) => {
   };
  
 
-  useEffect(() => {
-        // Ici, vous pouvez effectuer des actions en réaction au changement de selectedDetail
+  
 
-        console.log( "-------------",selectedDetail);
-
-        // Par exemple, charger plus d'informations, mettre à jour l'UI, etc.
-    
-});
-
+  const [successMessage, setSuccessMessage] = useState("");
 
 ////////////////////////////////////////
 
 
-const user = JSON.parse(window.sessionStorage.getItem('user'));
-    const username=user.username
-    const [fullname,setFullname] = useState("");
-    const [fPrenom,setfPrenom] = useState("");
-    const [fNai,setfNai] = useState("");
-    const [fSexe,setfSexe] = useState("");
-    const [fRegime,setfRegime] = useState("");
-    const [fSitu,setfSitu] = useState("");
-    const [fville,setfville] = useState("");
-    const [fAdresse,setfAdresse] = useState("");
-    const [fAdresse2,setfAdresse2] = useState("");
-    const [fCpo,setfCpo] = useState("");
-    const [ftel,setftel] = useState("");
-    const [ftel1,setftel1] = useState("");
-    const [factive,setfactive] = useState("");
-    const [fprof,setfprof] = useState("");
-    const [fPays_de_naissance,setfPays_de_naissance] = useState("");
-    const [fvilN,setfvilN] = useState("");
-    const [fCP,setfCP] = useState("");
-    const [fCom,setfCom] = useState("");
-    const [fEmail,setfEmail] = useState("");
+    let user = null;
 
+    try {
+      const userData = window.sessionStorage.getItem('user');
+      
+      if (userData) {
+        user = JSON.parse(userData);
+      }
+    } catch (error) {
+      // Gérer les erreurs de parsing JSON ici
+      console.error("Erreur lors de l'analyse des données utilisateur :", error);
+    }
+
+    // Vous pouvez ensuite utiliser 'user' en toute sécurité
+    const username = user ? user.username : '';    
+    const [fullname, setFullname] = useState(selectedDetail.fullname);
+    const [fPrenom, setfPrenom] = useState(selectedDetail.fPrenom);
+    const [fNai, setfNai] = useState(selectedDetail.fNai);
+    const [fSexe, setfSexe] = useState(selectedDetail.fSexe);
+    const [fRegime, setfRegime] = useState(selectedDetail.fRegime);
+    const [fSitu, setfSitu] = useState(selectedDetail.fSitu);
+    const [fville, setfville] = useState(selectedDetail.fville);
+    const [fAdresse, setfAdresse] = useState(selectedDetail.fAdresse);
+    const [fAdresse2, setfAdresse2] = useState(selectedDetail.fAdresse2);
+    const [fCpo, setfCpo] = useState(selectedDetail.fCpo);
+    const [ftel, setftel] = useState(selectedDetail.ftel);
+    const [ftel1, setftel1] = useState(selectedDetail.ftel1);
+    const [factive, setfactive] = useState(selectedDetail.factive);
+    const [fprof, setfprof] = useState(selectedDetail.fprof);
+    const [fPays_de_naissance, setfPays_de_naissance] = useState(selectedDetail.fPays_de_naissance);
+    const [fvilN, setfvilN] = useState(selectedDetail.fvilN);
+    const [fCP, setfCP] = useState(selectedDetail.fCP);
+    const [fCom, setfCom] = useState(selectedDetail.fCom);
+    const [fEmail, setfEmail] = useState(selectedDetail.fEmail);
+    const [fstatut, setfstatut] = useState(selectedDetail.fstatut);
     
-/////////////////////////////
 
+    const [isConfirmed, setIsConfirmed] = useState(false);
+
+/////////////////////////////
+const defaultValues = {
+  username: selectedDetail.username,
+  fullname: selectedDetail.fullname,
+  fPrenom: selectedDetail.fPrenom,
+  fNai: selectedDetail.fNai,
+  fRegime: selectedDetail.fRegime,
+  fSitu: selectedDetail.fSitu,
+  fville: selectedDetail.fville,
+  fAdresse: selectedDetail.fAdresse,
+  fAdresse2: selectedDetail.fAdresse2,
+  fCpo: selectedDetail.fCpo,
+  fSexe: selectedDetail.fSexe,
+  ftel: selectedDetail.ftel,
+  ftel1: selectedDetail.ftel1,
+  fprof: selectedDetail.fprof,
+  fPays_de_naissance: selectedDetail.fPays_de_naissance,
+  fEmail: selectedDetail.fEmail,
+  fvilN: selectedDetail.fvilN,
+  fCP: selectedDetail.fCP,
+  factive: selectedDetail.factive,
+  fCom: selectedDetail.fCom,
+  fstatut: selectedDetail.fstatut, // Assurez-vous que fstatut est défini quelque part dans votre composant
+  contrats: selectedDetail.contrats
+  // ... autres valeurs par défaut ...
+};
+
+//putost
+const handleChange = (e, index) => {
+    const { name, value } = e.target;
+    const updatedForms = [...contrats];
+
+    if (updatedForms[index]) {
+        updatedForms[index][name] = value.trim() !== "" ? value : defaultValues[name];
+        setcontrats(updatedForms);
+        console.log(updatedForms);
+    } else {
+        // Gérer le cas où l'index n'est pas valide
+    }
+};
+const handleSubmit = (e, index) => {
+  event.preventDefault(); // Empêche le rechargement de la page
+
+  e.preventDefault();
+};
+function addPost(event) {
+
+
+
+  const post = {
+    username,
+    fullname,
+    fPrenom,
+    fNai,
+    fRegime,
+    fSitu,
+    fville,
+    fAdresse,
+    fAdresse2,
+    fCpo,
+    fSexe,
+    ftel,
+    ftel1,
+    fprof,
+    fPays_de_naissance,
+    fEmail,
+    fvilN,
+    fCP,
+    factive,
+    fCom,
+    fstatut, // Assurez-vous que fstatut est défini quelque part dans votre composant
+    contrats
+};
+
+  event.preventDefault(); // Empêche le rechargement de la page
+
+  console.log("data",post)
+  axios.put('http://localhost:8000/auth/userforms/update/'+selectedDetail.id+'/', post)
+  .then(response => {
+      console.log('reponse',response.data);
+      setIsConfirmed(true);
+
+      setSuccessMessage("Les informations ont été modifiées avec succès!");
+  })
+  .catch(error => {
+     console.error('Erreur lors de l\'envoi des données:', error);
+     setSuccessMessage("Les informations ont pas  été modifiées !");
+
+  });
+  
+
+
+  
+ }
+
+//////
   return (
     <BrowserRouter>
 
     <Card style={{ 
-    padding: '10px', 
+    padding: '5px', 
  
     margin: '2rem', 
     boxSizing: 'border-box'}}>
-    <form  >
+    <form onSubmit={addPost}>
     <Grid container spacing={3}>
     <Grid item xs={4}>
+    <InputLabel>nom</InputLabel>
 
       <TextField
+        
+
         id="ch1"
-        label="Nom"
-         
-        fullWidth
-        value={selectedDetail.fullname}
+        placeholder={selectedDetail.fullname} // Utilisation en tant que placeholder
+
+        //placeholder={selectedDetail.fullname}
         onChange={(e) => setFullname(e.target.value)}
-        style={{ marginBottom: '20px' }}
       />
       </Grid>
       <Grid item xs={4}>
+      <InputLabel>Prenom</InputLabel>
 
       <TextField
+   
+
         id="ch2"
-        label="Prenom"
          
         fullWidth
-        value={selectedDetail.fPrenom}
+        placeholder={selectedDetail.fPrenom}
         onChange={(e) => setfPrenom(e.target.value)}
-        style={{ marginBottom: '20px' }}
+
 
       />
             </Grid>
             <Grid item xs={4}>
 
+            <InputLabel>Date de naissance</InputLabel>
 
-      <TextField
-        id="ch3"
-        label="Date de naissance"
-        type="date"
-        fullWidth
-        value={selectedDetail.fNai}
-        onChange={(e) => setfNai(e.target.value)}
-        style={{ marginBottom: '20px' }}
+            <TextField
 
-      />
+
+              id="ch3"
+              type="date"
+              
+
+              fullWidth
+              value={selectedDetail.fNai}
+              onChange={(e) => setfNai(e.target.value)}
+
+              InputLabelProps={{
+                shrink: true, // Le label restera toujours au-dessus de l'input
+            }}
+
+            />
             </Grid>
 
             <Grid item xs={4}>
 
-      <FormControl   fullWidth>
-        <InputLabel id="sex-label">Sexe</InputLabel>
-        <Select
-          labelId="sex-label"
-          id="ch4"
-          value={selectedDetail.fSexe}
-          onChange={(e) => setfSexe(e.target.value)}
-          label="Sexe"
-          style={{ marginBottom: '20px' }}
+              <FormControl   fullWidth>
+                <InputLabel id="sex-label">Sexe</InputLabel>
+                <Select
+                  id="ch4"
+                  value={selectedDetail.fSexe}
+                  onChange={(e) => setfSexe(e.target.value)}
+                  label="Sexe"
+  
 
-        >
-          <MenuItem value="Femme">Femme</MenuItem>
-          <MenuItem value="Homme">Homme</MenuItem>
-        </Select>
-      </FormControl>
-      </Grid>
-      <Grid item xs={4}>
+                   >
+                  <MenuItem value="Femme">Femme</MenuItem>
+                  <MenuItem value="Homme">Homme</MenuItem>
+                </Select>
+              </FormControl>
+              </Grid>
+              <Grid item xs={4}>
+              <InputLabel>Régime</InputLabel>
+
+              <TextField
+                
+
+                id="ch5"                
+                fullWidth
+                placeholder={selectedDetail.fRegime}
+                onChange={(e) => setfRegime(e.target.value)}
+
+
+              />
+                    </Grid>
+            <Grid item xs={4}>
+
+
+            <FormControl   fullWidth>
+              <InputLabel id="situ-label">Situation</InputLabel>
+              <Select
+                labelId="situ-label"
+                id="ch6"
+                value={selectedDetail.fSitu || ''}
+                onChange={(e) => setfSitu(e.target.value)}
+                label="Situation"
+        
+
+              >
+                <MenuItem value="célibataire">Célibataire</MenuItem>
+                <MenuItem value="divorcé(e)">Divorcé(e)</MenuItem>
+                <MenuItem value="Marié(e)">Marié(e)</MenuItem>
+                <MenuItem value="Veuf(ve)">Veuf(ve)</MenuItem>
+                <MenuItem value="Concubin(e)">Concubin(e)</MenuItem>
+                <MenuItem value="Partenaire lié par un PACS*">Partenaire lié par un PACS*</MenuItem>
+                <MenuItem value="total_prixcontracts">total_prixcontracts</MenuItem>
+
+                </Select>
+                </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                <InputLabel>Ville</InputLabel>
+
+                <TextField
+                  
+
+                  id="ch7"
+                  
+                  fullWidth
+                  placeholder={selectedDetail.fville}
+                  onChange={(e) => setfville(e.target.value)}
+
+                  //className={classes.noOutline}
+
+
+                />
+                      </Grid>
+            <Grid item xs={4}>
+            <InputLabel>Address</InputLabel>
+
+              <TextField
+                
+
+                id="ch8"
+                
+                fullWidth
+                placeholder={selectedDetail.fAdresse}
+                onChange={(e) => setfAdresse(e.target.value)}
+
+                //className={classes.noOutline}
+
+              />
+                    </Grid>
+
+            <Grid item xs={4}>
+
+            <InputLabel>Adresse optionel</InputLabel>
 
       <TextField
-        id="ch5"
-        label="Régime"
+   
+
+        id="ch9"
          
         fullWidth
-        value={selectedDetail.fRegime}
-        onChange={(e) => setfRegime(e.target.value)}
-        style={{ marginBottom: '20px' }}
+        placeholder={selectedDetail.fAdresse2}
+        onChange={(e) => setfAdresse2(e.target.value)}
+        //className={classes.noOutline}
+
+
+      />
+            </Grid>
+
+            <Grid item xs={4}>
+            <InputLabel>Code Postale</InputLabel>
+
+      <TextField
+   
+
+        id="ch10"
+         
+        fullWidth
+        placeholder={selectedDetail.fCpo}
+        onChange={(e) => setfCpo(e.target.value)}
+
+        //className={classes.noOutline}
+
+      />
+            </Grid>
+            <Grid item xs={4}>
+
+            <InputLabel>Email</InputLabel>
+
+      <TextField
+   
+
+        id="ch11"
+        type="email"
+         
+        fullWidth
+        placeholder={selectedDetail.fEmail}
+        onChange={(e) => setfEmail(e.target.value)}
+
+        //className={classes.noOutline}
+
+      />
+            </Grid>
+            <Grid item xs={4}>
+
+            <InputLabel>Tél/Portable</InputLabel>
+
+      <TextField
+   
+
+        id="ch12"
+         
+        fullWidth
+        placeholder={selectedDetail.ftel}
+        onChange={(e) => setftel(e.target.value)}
+
+        //className={classes.noOutline}
+
+      />
+            </Grid>
+
+            <Grid item xs={4}>
+            <InputLabel>Tél optionel</InputLabel>
+
+      <TextField
+   
+
+        id="ch13"
+         
+        fullWidth
+        placeholder={selectedDetail.ftel1}
+        onChange={(e) => setftel1(e.target.value)}
+
+        //className={classes.noOutline}
+
+      />
+            </Grid>
+            <Grid item xs={4}>
+
+            <InputLabel>Catégorie professionnelle</InputLabel>
+
+      <TextField
+   
+
+        id="ch14"
+         
+        fullWidth
+        placeholder={selectedDetail.fprof}
+        onChange={(e) => setfprof(e.target.value)}
+
+        //className={classes.noOutline}
+
+      />
+            </Grid>
+            <Grid item xs={4}>
+
+            <InputLabel>Activité</InputLabel>
+
+      <TextField
+   
+
+        id="ch15"
+         
+        fullWidth
+        placeholder={selectedDetail.factive}
+        onChange={(e) => setfactive(e.target.value)}
+
+        //className={classes.noOutline}
+
+      />
+            </Grid>
+            <Grid item xs={4}>
+
+            <InputLabel>Ville de naissance</InputLabel>
+
+<TextField
+   
+
+        id="ch16"
+         
+        fullWidth
+        placeholder={selectedDetail.fvilN}
+        onChange={(e) => setfvilN(e.target.value)}
+
+        //className={classes.noOutline}
+
+      />
+            </Grid>
+
+            <Grid item xs={4}>
+            <InputLabel>Pays de naissance</InputLabel>
+
+      <TextField
+   
+
+        id="ch17"
+         
+        fullWidth
+        placeholder={selectedDetail.fPays_de_naissance}
+        onChange={(e) => setfPays_de_naissance(e.target.value)}
+
+        //className={classes.noOutline}
+
+      />
+            </Grid>
+            <Grid item xs={4}>
+
+            <InputLabel>Cp de naissance</InputLabel>
+
+      <TextField
+        
+
+        id="ch18"
+         
+        fullWidth
+        placeholder={selectedDetail.fCP}
+        onChange={(e) => setfCP(e.target.value)}
+
+        //className={classes.noOutline}
+
+      />
+            </Grid>
+            <Grid item xs={4}>
+
+            <InputLabel>Complément</InputLabel>
+
+      <TextField
+   
+
+        id="ch19"
+         
+        fullWidth
+        placeholder={selectedDetail.fCom}
+        onChange={(e) => setfCom(e.target.value)}
+
+        //className={classes.noOutline}
 
       />
             </Grid>
             <Grid item xs={4}>
 
 
-      <FormControl   fullWidth>
-        <InputLabel id="situ-label">Situation</InputLabel>
+            <FormControl   fullWidth>
+        <InputLabel id="situ-label">Statut fiche</InputLabel>
         <Select
           labelId="situ-label"
           id="ch6"
-          value={selectedDetail.fSitu}
-          onChange={(e) => setfSitu(e.target.value)}
-          label="Situation"
-          style={{ marginBottom: '20px' }}
+          placeholder={selectedDetail.fstatut}
+          onChange={(e) => setfstatut(e.target.value)}
+          label="Statut fiche"
+  
 
         >
-          <MenuItem value="célibataire">Célibataire</MenuItem>
-          <MenuItem value="divorcé(e)">Divorcé(e)</MenuItem>
-          <MenuItem value="Marié(e)">Marié(e)</MenuItem>
+          <MenuItem value="Leads sans signature">Leads sans signature</MenuItem>
+          <MenuItem value="SQ a faire">SQ a faire</MenuItem>
+          <MenuItem value="SQ PJ/DEP A faire)">SQ PJ/DEP A faire</MenuItem>
+          <MenuItem value="SQ MUT a faire">SQ "MUT"a faire</MenuItem>
+          <MenuItem value="SQ LCDA a faire">SQ "LCDA"a faire</MenuItem>
+          <MenuItem value="SQ Non validée">SQ Non validée</MenuItem>
+          <MenuItem value="SQ a validée">SQ a validée</MenuItem>
+          <MenuItem value="SAP 3/3">SAP 3/3</MenuItem>
+          <MenuItem value="SAP sans PJ">SAP sans PJ</MenuItem>
+          <MenuItem value="Dossier PJ reçu">Dossier PJ reçu</MenuItem>
+          <MenuItem value="X-Avocat SAP Mutuelle non complet">X-Avocat SAP Mutuelle non complet</MenuItem>
+          <MenuItem value="V-Avocat SAP Mutuelle parrainé">V-Avocat SAP Mutuelle parrainé</MenuItem>
+          <MenuItem value="Avocat">Avocat</MenuItem>
           {/* Ajoutez d'autres options ici si nécessaire */}
         </Select>
       </FormControl>
       </Grid>
-      <Grid item xs={4}>
-
-      <TextField
-        id="ch7"
-        label="Ville"
-         
-        fullWidth
-        value={selectedDetail.fville}
-        onChange={(e) => setfville(e.target.value)}
-        style={{ marginBottom: '20px' }}
-        className={classes.noOutline}
-
-
-      />
-            </Grid>
-            <Grid item xs={4}>
-
-      <TextField
-        id="ch8"
-        label="Adresse"
-         
-        fullWidth
-        value={selectedDetail.fAdresse}
-        onChange={(e) => setfAdresse(e.target.value)}
-        style={{ marginBottom: '20px' }}
-        className={classes.noOutline}
-
-      />
-            </Grid>
-
-            <Grid item xs={4}>
-
-
-      <TextField
-        id="ch9"
-        label="Adresse optionel"
-         
-        fullWidth
-        value={selectedDetail.fAdresse2}
-        onChange={(e) => setfAdresse2(e.target.value)}
-        className={classes.noOutline}
-        style={{ marginBottom: '20px' }}
-
-      />
-            </Grid>
-
-            <Grid item xs={4}>
-
-      <TextField
-        id="ch10"
-        label="Code Postal"
-         
-        fullWidth
-        value={selectedDetail.fCpo}
-        onChange={(e) => setfCpo(e.target.value)}
-        style={{ marginBottom: '20px' }}
-        className={classes.noOutline}
-
-      />
-            </Grid>
-            <Grid item xs={4}>
-
-
-      <TextField
-        id="ch11"
-        label="Email"
-        type="email"
-         
-        fullWidth
-        value={selectedDetail.fEmail}
-        onChange={(e) => setfEmail(e.target.value)}
-        style={{ marginBottom: '20px' }}
-        className={classes.noOutline}
-
-      />
-            </Grid>
-            <Grid item xs={4}>
-
-
-      <TextField
-        id="ch12"
-        label="Tél/Portable"
-         
-        fullWidth
-        value={selectedDetail.ftel}
-        onChange={(e) => setftel(e.target.value)}
-        style={{ marginBottom: '20px' }}
-        className={classes.noOutline}
-
-      />
-            </Grid>
-
-            <Grid item xs={4}>
-
-      <TextField
-        id="ch13"
-        label="Tél 1"
-         
-        fullWidth
-        value={selectedDetail.ftel1}
-        onChange={(e) => setftel1(e.target.value)}
-        style={{ marginBottom: '20px' }}
-        className={classes.noOutline}
-
-      />
-            </Grid>
-            <Grid item xs={4}>
-
-
-      <TextField
-        id="ch14"
-        label="Catégorie professionnelle"
-         
-        fullWidth
-        value={selectedDetail.fprof}
-        onChange={(e) => setfprof(e.target.value)}
-        style={{ marginBottom: '20px' }}
-        className={classes.noOutline}
-
-      />
-            </Grid>
-            <Grid item xs={4}>
-
-
-      <TextField
-        id="ch15"
-        label="Activité"
-         
-        fullWidth
-        value={selectedDetail.factive}
-        onChange={(e) => setfactive(e.target.value)}
-        style={{ marginBottom: '20px' }}
-        className={classes.noOutline}
-
-      />
-            </Grid>
-            <Grid item xs={4}>
-
-
-<TextField
-        id="ch16"
-        label="Ville de naissance"
-         
-        fullWidth
-        value={selectedDetail.fvilN}
-        onChange={(e) => setfvilN(e.target.value)}
-        style={{ marginBottom: '20px' }}
-        className={classes.noOutline}
-
-      />
-            </Grid>
-
-            <Grid item xs={4}>
-
-      <TextField
-        id="ch17"
-        label="Pays de naissance"
-         
-        fullWidth
-        value={selectedDetail.fPays_de_naissance}
-        onChange={(e) => setfPays_de_naissance(e.target.value)}
-        style={{ marginBottom: '20px' }}
-        className={classes.noOutline}
-
-      />
-            </Grid>
-            <Grid item xs={4}>
-
-
-      <TextField
-        id="ch18"
-        label="CP de naissance"
-         
-        fullWidth
-        value={selectedDetail.fCP}
-        onChange={(e) => setfCP(e.target.value)}
-        style={{ marginBottom: '20px' }}
-        className={classes.noOutline}
-
-      />
-            </Grid>
-            <Grid item xs={4}>
-
-
-      <TextField
-        id="ch19"
-        label="Complément"
-         
-        fullWidth
-        value={selectedDetail.fCom}
-        onChange={(e) => setfCom(e.target.value)}
-        style={{ marginBottom: '20px' }}
-        className={classes.noOutline}
-
-      />
-            </Grid>
 </Grid>
       <br></br>
 
@@ -476,121 +640,157 @@ const user = JSON.parse(window.sessionStorage.getItem('user'));
                     <form onSubmit={(e) => handleSubmit(e, index)}>
                     <Grid container spacing={3}>
             <Grid item xs={6}>
+            <InputLabel>Société a résilier</InputLabel>
+
                 <TextField
+                    
+
                     fullWidth
-                    label="Société_a_résilier"
                     name="Société_a_résilier"
-                    value={contrat.Société_a_résilier}
+                    placeholder={contrat.Société_a_résilier}
                     onChange={(e) => handleChange(e, index)}
                     />
             </Grid>
             <Grid item xs={3}>
+            <InputLabel>Type de Résiliation</InputLabel>
+
                 <TextField
+                      
+
                     fullWidth
-                    label="Type de résiliation"
-                    name="Type_de_résiliation"
-                    value={contrat.Type_de_Résiliation}
+                    name="Type_de_Résiliation"
+                    placeholder={contrat.Type_de_Résiliation}
                     onChange={(e) => handleChange(e, index)}
 
                      
                 />
             </Grid>
             <Grid item xs={3}>
+            <InputLabel>Type de contrat</InputLabel>
+
                 <TextField
+                    
+
                     fullWidth
-                    label="Type contrat"
                     name="Type_de_contrat"
-                    value={contrat.Type_de_contrat}
+                    placeholder={contrat.Type_de_contrat}
                     onChange={(e) => handleChange(e, index)}
 
                      
                 />
             </Grid>
             <Grid item xs={3}>
+            <InputLabel>Nom assurance</InputLabel>
+
                 <TextField
+                    
+
                     fullWidth
-                    label="Nom assurance"
                     name="Nom_assurance"
-                    value={contrat.Nom_assurance}
+                    placeholder={contrat.Nom_assurance}
                     onChange={(e) => handleChange(e, index)}
                      
                 />
             </Grid>
             <Grid item xs={6}>
+            <InputLabel>Adress</InputLabel>
+
                 <TextField
+                     
+
                     fullWidth
-                    label="Adresse"
                     name="Adresse"
-                    value={contrat.Adresse}
+                    placeholder={contrat.Adresse}
                     onChange={(e) => handleChange(e, index)}
                      
                 />
             </Grid>
             <Grid item xs={3}>
+            <InputLabel>N° contrat</InputLabel>
+
                 <TextField
+                    
+
                     fullWidth
-                    label="N° contrat"
                     name="N_contrat"
-                    value={contrat.N_contrat}
+                    placeholder={contrat.N_contrat}
                     onChange={(e) => handleChange(e, index)}
                      
                 />
             </Grid>
             <Grid item xs={3}>
+            <InputLabel>N° SS</InputLabel>
+
                 <TextField
+                    
+
                     fullWidth
-                    label="N° SS"
                     name="N_SS"
-                    value={contrat.N_SS}
+                    placeholder={contrat.N_SS}
                     onChange={(e) => handleChange(e, index)}
                      
                 />
             </Grid>
             <Grid item xs={3}>
+            <InputLabel>Code postale</InputLabel>
+
                 <TextField
+                    
+
                     fullWidth
-                    label="Code postale"
                     name="Code_postale"
-                    value={contrat.Code_postale}
+                    placeholder={contrat.Code_postale}
                     onChange={(e) => handleChange(e, index)}
                      
                 />
             </Grid>
             <Grid item xs={3}>
+            <InputLabel>Ville</InputLabel>
+
                 <TextField
+                    
+
                     fullWidth
-                    label="Ville"
                     name="Ville"
-                    value={contrat.Ville}
+                    placeholder={contrat.Ville}
                     onChange={(e) => handleChange(e, index)}
                      
                 />
             </Grid>
             <Grid item xs={3}>
+            <InputLabel>Nombre de contrats</InputLabel>
+
                 <TextField
+                   
+                   type="number"
                     fullWidth
-                    label="Nombre de contrat"
                     name="Nombre_de_contrat"
-                    value={contrat.Nombre_de_contrat}
+                    placeholder={contrat.Nombre_de_contrat.toString()}
                     onChange={(e) => handleChange(e, index)}
                      
                 />
             </Grid>
             <Grid item xs={4}>
+            <InputLabel>N° RAR</InputLabel>
+
                 <TextField
+                    
+
                     fullWidth
-                    label="N° RAR"
                     name="N_RAR"
-                    value={contrat.N_RAR}
+                    placeholder={contrat.N_RAR}
                     onChange={(e) => handleChange(e, index)}
                      
                 />
             </Grid>
             
             <Grid item xs={3}>
+            <InputLabel>Date effet</InputLabel>
+
                 <TextField
+                    
+
                     fullWidth
-                    label="Date effet"
                     name="Date_effet"
                     type="date"
                     value={contrat.Date_effet}
@@ -602,25 +802,31 @@ const user = JSON.parse(window.sessionStorage.getItem('user'));
                 />
             </Grid>
             <Grid item xs={3}>
-    <TextField
-        fullWidth
-        label="Date de résiliation"
-        name="Date_de_résiliation"
-        type="date"
-        value={contrat.Date_de_résiliation}
-        onChange={(e) => handleChange(e, index)}
-        InputLabelProps={{
-          shrink: true, // Le label restera toujours au-dessus de l'input
-      }}
-        
-    />
-</Grid>
-<Grid item xs={6}>
+            <InputLabel>Date de résiliation</InputLabel>
+
+            <TextField
+                
+
+                fullWidth
+                name="Date_de_résiliation"
+                type="date"
+                value={contrat.Date_de_résiliation}
+                onChange={(e) => handleChange(e, index)}
+                InputLabelProps={{
+                  shrink: true, // Le label restera toujours au-dessus de l'input
+              }}
+                
+            />
+        </Grid>
+                <Grid item xs={6}>
+                <InputLabel>Commentaire</InputLabel>
+
                 <TextField
+                   
+
                     fullWidth
-                    label="Commentaire"
                     name="Commentaire"
-                    value={contrat.Commentaire}
+                    placeholder={contrat.Commentaire}
                     onChange={(e) => handleChange(e, index)}
                      
                 />
@@ -634,8 +840,18 @@ const user = JSON.parse(window.sessionStorage.getItem('user'));
         </div>
                 
 
-                
+        <Button variant="contained" color="primary" type="submit" style={{ marginTop: '20px' }}>
+                    valider
+                </Button> 
+                {isConfirmed && (
+                    <div style={{ marginTop: '20px' }}>
+                        <p>{successMessage}</p>
+                        
+                        
+                    </div>
+                )}
     </form>
+    
   </Card>
     </BrowserRouter>
 
